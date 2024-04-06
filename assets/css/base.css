@@ -1,0 +1,52 @@
+:root {
+    --primary-color: #ec245b;
+    --white-color: #fff;
+    --grey-color: #7f7c99;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+}
+
+.modal__overlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: 0;
+    animation: fadeIn 0.1s linear;
+}
+
+.modal__body {
+    margin: auto;
+    position: relative;
+    z-index: 1;
+    --grow-from: 0.7;
+    --grow-to: 1;
+    animation: grow 0.1s linear;
+}
+
+@keyframes grow {
+    from {
+        transform: scale(var(--grow-from));
+    }
+    to {
+        transform: scale(var(--grow-to));
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

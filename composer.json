@@ -1,0 +1,19 @@
+{
+    "name": "vk/magicmirror",
+    "autoload": {
+        "files": [
+            "app/cores/Helper.php"
+        ],
+        "psr-4": {
+            "MM\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "vk"
+        }
+    ],
+    "require": {
+        "cboden/ratchet": "^0.4.4"
+    }
+}
