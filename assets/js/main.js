@@ -88,6 +88,8 @@ function renderItems() {
 
 function handleEvents() {
     checkboxElements = $$(".toggle");
+    deviceElementsList = $$(".devices-item");
+
     Array.from(checkboxElements).forEach(checkbox => {
         checkbox.onclick =  function(event) {
             event.preventDefault();
@@ -110,7 +112,22 @@ function handleEvents() {
         })
     });
 
-    
+    Array.from(deviceElementsList).forEach(deviceElement => {
+        deviceElement.addEventListener('click', (e) => {
+            item = e.target.closest(".devices-item");
+            nameDeviceElement = item.querySelector(".devices-item-header");
+
+            data = [
+                {
+                    "name": nameDeviceElement.innerText,
+                    "device_id": item.id,
+                    "active": item.classList.contains("devices-item--active") ? false : true,
+                }
+            ];
+            
+            sendRequest("request", "update devices", data);
+        })
+    })
 }
 
 function sendRequest(action, requestType="", data=[]) {

@@ -24,11 +24,11 @@ use Ratchet\ConnectionInterface;
 */
 
 /*
-json from devices
+json data field from devices
 {
     device_id: bulb_01, bulb_02, door_01, door_02... 
-    name: 
-    active:
+    name: string
+    active: bool
 }
 
 */
@@ -65,21 +65,14 @@ class Chat implements MessageComponentInterface {
 
         //join action
         if (isset($action) && $action == "join") {
+            var_dump($raw_msg);
+
             if (isset($sender) && $sender == "apps" ) {
                 $this->appsList->attach($from);
                 echo "New app has joined\n";
 
-                $payload = self::payload(false, "update");
-                //send update request to mm
-                foreach ($this->mm as $m) {
-                    self::sendData($m, $payload);
-                }
-
-                //send update request to devices
-                foreach ($this->mm as $m) {
-                    self::sendData($m, $payload);
-                }
-
+                $payload = self::payload(true, "accept");
+                self::sendData($from, $payload);
             } else if (isset($sender) && $sender == "mm") {
                 $this->mm->attach($from);
                 echo "MagicMirror has joined\n";
@@ -195,8 +188,24 @@ class Chat implements MessageComponentInterface {
         } else if ($this->mm->contains($conn)){
             $this->mm->detach($conn);
             echo "MagicMirror has disconnected\n";
+
+            self::$modulesData = [];
+            $payload = self::payload(true, "accept");
+            foreach ($this->appsList as $app) {
+                self::sendData($app, $payload);
+            }
         } else if ($this->devicesList->contains($conn)) {
+            echo "Devices has disconnected\n";
             $this->devicesList->detach($conn);
+
+            self::$devicesData = [];
+            $payload = self::payload(true, "accept");
+            foreach ($this->appsList as $app) {
+                self::sendData($app, $payload);
+            }
+            foreach ($this->mm as $m) {
+                self::sendData($m, $payload);
+            }
         } else {
             echo "Guest has disconnected\n";
         }
