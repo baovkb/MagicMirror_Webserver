@@ -171,6 +171,7 @@ input:checked + .slider:before {
 
 .control-list-devices {
     min-width: 200px;
+    overflow: hidden;
 }
 
 .control-item {
@@ -226,4 +227,9 @@ input:checked + .slider:before {
     width: 200px;
     height: 200px;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

@@ -34,7 +34,7 @@ json data field from devices
 */
 
 class Chat implements MessageComponentInterface {
-    public static $modulesData = [];
+    public static $pageData = [];
     public static $devicesData = [];
 
     protected $appsList;
@@ -78,7 +78,7 @@ class Chat implements MessageComponentInterface {
                 echo "MagicMirror has joined\n";
 
                 //get data from mm
-                self::$modulesData = $data;
+                self::$pageData = $data;
 
                 //send data to mm
                 $payload = self::payload(true, "accept");
@@ -120,7 +120,7 @@ class Chat implements MessageComponentInterface {
                 //magic mirror chi co the xu ly phan hoi modules
                 //devices chi co the xu ly phan hoi dieu khien thiet bi
                 if ($fromMM) {
-                    self::$modulesData = $data;
+                    self::$pageData = $data;
                 } else if ($fromDevices) {
                     self::$devicesData = $data;
                 } else return;
@@ -160,7 +160,7 @@ class Chat implements MessageComponentInterface {
                 echo "Server received a refresh from {$sender}\n";
                 var_dump($raw_msg);
                 if ($fromMM) {
-                    self::$modulesData = $data;
+                    self::$pageData = $data;
                 } else if ($fromDevices) {
                     self::$devicesData = $data;
                 } else return;
@@ -189,7 +189,7 @@ class Chat implements MessageComponentInterface {
             $this->mm->detach($conn);
             echo "MagicMirror has disconnected\n";
 
-            self::$modulesData = [];
+            self::$pageData = [];
             $payload = self::payload(true, "accept");
             foreach ($this->appsList as $app) {
                 self::sendData($app, $payload);
@@ -220,7 +220,7 @@ class Chat implements MessageComponentInterface {
     static function payload($all = true, $action="update", $data = []) {
         if ($all) {
             $data = [
-                "modules" => self::$modulesData,
+                "page_modules" => self::$pageData,
                 "devices" => self::$devicesData,
             ];
         } 

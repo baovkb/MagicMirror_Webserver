@@ -3,6 +3,8 @@ var conn;
 
 var modulesList = [];
 var devicesList = [];
+var page = 0;
+var totalPage = 0;
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -34,8 +36,14 @@ function connectWS() {
         console.log(data);
 
         if (data["sender"] == "server" && data["action"] == "accept") {
-            modulesList = data["data"]["modules"];
+            if (data["data"]["page_modules"].hasOwnProperty("modules")) {
+                modulesList = data["data"]["page_modules"]["modules"];
+            } else {
+                modulesList = [];
+            }
             devicesList = data["data"]["devices"];
+            page = data["data"]["page_modules"]["page"];
+            totalPage = data["data"]["page_modules"]["total_page"];
 
             renderItems();
             handleEvents();
@@ -101,12 +109,16 @@ function handleEvents() {
                 parentNode = item.parentNode;
                 item = parentNode.getElementsByTagName("input")[0];
             }
-            data = [
-                {
+
+            console.log("page: " + page);
+            data = {
+                "page": page,
+                "modules": [{
                     "identifier": item.id,
                     "hidden": item.checked,
-                }
-            ];
+                }]
+            }
+                
             //send data
             sendRequest("request", "update modules", data);
         })
